@@ -1,0 +1,27 @@
+# use kafka properties http://kafka.apache.org/07/configuration.html
+pollIntervalInMs: 100
+openTsdbUrl: http://10.0.0.87:4242
+kafka:
+  autocommit.enable: true
+  auto.offset.reset: earliest
+  autocommit.interval.ms: 1000
+  group.id: opentsdb
+# Format per line, if you don't like to have a field, just remove it.
+lineFormat: "{ITEM_ID};{TIME};{VALUE};{QUALITY};{ERROR}"
+# millis Java millis or a Java Date Format, e.g. yyyy-MM-dd HH:mm:ss
+timeFormat: millis
+# if the metricName* field is not set, the event is not written to OpenTSDB
+streams:
+  - topic: /user/mapr/opc:Ramp1
+    metricNameValue: opc.ramp1.value
+    metricNameQuality: opc.ramp1.quality
+    metricNameError: opc.ramp1.error
+    tags:
+      type: long
+  - topic: /user/mapr/opc:Ramp2
+    metricNameValue: opc.ramp2.value
+    metricNameQuality: opc.ramp2.quality
+    metricNameError: opc.ramp2.error
+    tags:
+      type: float
+
