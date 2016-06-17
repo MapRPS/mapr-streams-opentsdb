@@ -24,4 +24,20 @@ streams:
     metricNameError: opc.ramp2.error
     tags:
       type: float
+  - topic: /user/mapr/opc:Random1
+    metricNameValue: opc.random1.value
+    tags:
+      type: long
+  - topic: /user/mapr/opc:Random2
+    metricNameValue: opc.random2.value
+    tags:
+      type: long
+  - topic: /user/mapr/opc:Random3
+    metricNameValue: opc.random3.value
+    tags:
+      type: long
+  - topic: /user/mapr/opc:Random4
+    metricNameValue: opc.random4.value
+    tags:
+      type: long
 

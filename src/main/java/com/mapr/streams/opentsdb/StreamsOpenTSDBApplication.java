@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.task.TaskExecutor;
@@ -16,6 +17,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.LogManager;
 
 /**
@@ -52,6 +54,11 @@ public class StreamsOpenTSDBApplication implements CommandLineRunner {
         }
     }
 
+    @Bean
+    public CountDownLatch closeLatch() {
+        return new CountDownLatch(1);
+    }
+
     public static void main(String[] args) throws Exception {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
@@ -60,7 +67,15 @@ public class StreamsOpenTSDBApplication implements CommandLineRunner {
             return;
         }
         configFile = args[0];
-        SpringApplication.run(StreamsOpenTSDBApplication.class, args);
-        Thread.currentThread().join();
+        ConfigurableApplicationContext ctx = SpringApplication.run(StreamsOpenTSDBApplication.class, args);
+
+        final CountDownLatch closeLatch = ctx.getBean(CountDownLatch.class);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                closeLatch.countDown();
+            }
+        });
+        closeLatch.await();
     }
 }
