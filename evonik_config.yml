@@ -1,0 +1,45 @@
+# use kafka properties http://kafka.apache.org/07/configuration.html
+pollIntervalInMs: 100
+openTsdbUrl: http://10.0.0.87:4242
+kafka:
+  autocommit.enable: true
+  auto.offset.reset: earliest
+  autocommit.interval.ms: 1000
+  group.id: opentsdb
+# Format per line, if you don't like to have a field, just remove it.
+lineFormat: "{ITEM_ID};{TIME};{VALUE};{QUALITY};{ERROR}"
+# millis Java millis or a Java Date Format, e.g. yyyy-MM-dd HH:mm:ss
+timeFormat: millis
+# if the metricName* field is not set, the event is not written to OpenTSDB
+streams:
+  - topic: /workshop/opc-stream:FCS0203_T05408.PV
+    metricNameValue: FCS0203_T05408.PV
+    tags:
+      description: Reaktortemperator
+      unit: celsius
+  - topic: /workshop/opc-stream:FCS0204_L08440.PV
+    metricNameValue: FCS0204_L08440.PV
+    tags:
+      description: Stand
+      unit: percent
+  - topic: /workshop/opc-stream:FCS0204_L08440.MV
+    metricNameValue: FCS0204_L08440.MV
+    tags:
+      description: Stand
+      unit: percent
+  - topic: /workshop/opc-stream:FCS0204_L08440.DV
+    metricNameValue: FCS0204_L08440.DV
+    tags:
+      description: Standregelung Regelabweichung
+      unit: percent
+  - topic: /workshop/opc-stream:FCS0204_T08473.PV
+    metricNameValue: FCS0204_T08473.PV
+    tags:
+      description: Reaktortemperatur
+      unit: celsius
+  - topic: /workshop/opc-stream:FCS0204_T08473.MV
+    metricNameValue: FCS0204_T08473.MV
+    tags:
+      description: Kaskadenregelung
+      unit: bar
+
